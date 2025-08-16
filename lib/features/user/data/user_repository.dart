@@ -9,12 +9,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_repository.g.dart';
+abstract class UserRepository {
+  Future<UserDto> getUser(int id, {CancelToken? cancel});
+}
 
-class UserRepository {
+class UserRepositoryImpl implements UserRepository {
   final UserDataSource _ds;
-  UserRepository(this._ds);
+  UserRepositoryImpl(this._ds);
 
+  @override
   Future<UserDto> getUser(int id, {CancelToken? cancel}) {
     return _ds.fetchUser(id, cancel: cancel);
   }
@@ -23,11 +26,12 @@ class UserRepository {
 @riverpod
 UserRepository userRepository(Ref ref) {
   final env = ref.watch(envProvider);
+
   if (env.useFake) {
-    return UserRepository(FakeUserDataSource());
+    return UserRepositoryImpl(FakeUserDataSource());
   } else {
     final dio = ref.watch(dioProvider);
     final api = ApiClient(dio);
-    return UserRepository(RemoteUserDataSource(api));
+    return UserRepositoryImpl(RemoteUserDataSource(api));
   }
 }
