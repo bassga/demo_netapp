@@ -1,5 +1,7 @@
 import 'package:demo_netapp/config/app_env.dart';
+import 'package:demo_netapp/core/network/auth_interceptor.dart';
 import 'package:demo_netapp/core/network/logging_interceptor.dart';
+import 'package:demo_netapp/core/network/retry_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,7 +27,10 @@ Dio dio(Ref ref) {
     ),
   );
 
-  dio.interceptors.add(LoggingInterceptor());
+  dio.interceptors
+    ..add(LoggingInterceptor())
+    ..add(AuthInterceptor(() async => null))
+    ..add(RetryInterceptor(dio));
 
   return dio;
 }

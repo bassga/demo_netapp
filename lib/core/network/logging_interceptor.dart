@@ -5,11 +5,19 @@ import 'package:logger/logger.dart';
 class LoggingInterceptor extends Interceptor {
   final _log = Logger();
 
+  Map<String, dynamic> _maskHeaders(Map<String, dynamic> h) {
+    final m = Map<String, dynamic>.from(h); // 副作用が起きるためコピー
+    if (m.containsKey('Authorization')) {
+      m['Authorization'] = 'Bearer ***';
+    }
+    return m;
+  }
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (kDebugMode) {
       _log.i('[REQUEST] ${options.method} ${options.baseUrl}');
-      _log.i('Headers: ${options.headers}');
+      _log.i('Headers: ${_maskHeaders(options.headers)}');
       _log.i('Query Parameters: ${options.queryParameters}');
       _log.i('Data: ${options.data}');
     }
