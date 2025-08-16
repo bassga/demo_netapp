@@ -9,6 +9,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'user_repository.g.dart';
+
 abstract class UserRepository {
   Future<UserDto> getUser(int id, {CancelToken? cancel});
 }
