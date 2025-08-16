@@ -16,6 +16,12 @@ Dio dio(Ref ref) {
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       sendTimeout: const Duration(seconds: 10),
+      headers: const {
+        'Accept': 'application/json',
+        'User-Agent': 'demo_netapp/0.1 (+flutter; dio)',
+      },
+      validateStatus: (status) =>
+          status != null && status >= 200 && status < 600,
     ),
   );
 
